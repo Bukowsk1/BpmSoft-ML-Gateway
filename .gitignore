@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+
+Backend/.env
+Backend/__pycache__/
+Backend/app/__pycache__/
+Backend/tests/__pycache__/
+Backend/.pytest_cache/
+
+Karina/kaggle/
+Karina/Forecasting-demand/.git/

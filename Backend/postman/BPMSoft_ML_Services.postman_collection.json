@@ -1,0 +1,165 @@
+{
+  "info": {
+    "_postman_id": "b4b8e329-4d58-4a1c-8a9d-bpmsoft-ml-router",
+    "name": "BPMSoft ML Services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Коллекция для демонстрации ML API-шлюза BPMSoft."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000/api/v1"
+    },
+    {
+      "key": "requestId",
+      "value": "bpmsoft-demo-001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Healthcheck",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Request-ID",
+                "value": "{{requestId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Проверка состояния API и загрузки demand-модели."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Demand",
+      "item": [
+        {
+          "name": "GET Demand Sample",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Request-ID",
+                "value": "{{requestId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/predict/demand/sample",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "predict",
+                "demand",
+                "sample"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Predict Demand",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Request-ID",
+                "value": "{{requestId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"records\": [\n    {\n      \"date\": \"2022-01-21\",\n      \"sku\": \"MI-006\",\n      \"brand\": \"MiBrand1\",\n      \"segment\": \"Milk-Seg3\",\n      \"category\": \"Milk\",\n      \"channel\": \"Retail\",\n      \"region\": \"PL-Central\",\n      \"pack_type\": \"Multipack\",\n      \"price_unit\": 2.38,\n      \"promotion_flag\": 0,\n      \"delivery_days\": 1,\n      \"stock_available\": 141,\n      \"delivered_qty\": 128,\n      \"units_sold\": 9\n    },\n    {\n      \"date\": \"2022-01-21\",\n      \"sku\": \"YO-020\",\n      \"brand\": \"YoBrand3\",\n      \"segment\": \"Yogurt-Seg2\",\n      \"category\": \"Yogurt\",\n      \"channel\": \"Retail\",\n      \"region\": \"PL-Central\",\n      \"pack_type\": \"Carton\",\n      \"price_unit\": 4.84,\n      \"promotion_flag\": 0,\n      \"delivery_days\": 2,\n      \"stock_available\": 161,\n      \"delivered_qty\": 177,\n      \"units_sold\": 13\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/predict/demand",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "predict",
+                "demand"
+              ]
+            },
+            "description": "Пакетный прогноз спроса по двум SKU."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Price",
+      "item": [
+        {
+          "name": "GET Price Sample",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Request-ID",
+                "value": "{{requestId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/predict/price/sample",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "predict",
+                "price",
+                "sample"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Predict Price",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Request-ID",
+                "value": "{{requestId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"MI-006\",\n  \"brand\": \"MiBrand1\",\n  \"category\": \"Milk\",\n  \"region\": \"PL-Central\",\n  \"current_price\": 2.38,\n  \"stock_available\": 141,\n  \"delivered_qty\": 128,\n  \"promotion_flag\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/predict/price",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "predict",
+                "price"
+              ]
+            },
+            "description": "Демо-запрос к mock-сервису прогноза цены."
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[project]
+name = "bpmsoft-ml-router"
+version = "0.1.0"
+description = "Production-ready API gateway for BPMSoft ML models"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "fastapi>=0.115.0",
+    "httpx>=0.28.0",
+    "lightgbm>=4.0.0",
+    "numpy>=1.26.0",
+    "pandas>=2.0.0",
+    "pydantic-settings>=2.4.0",
+    "streamlit>=1.44.0",
+    "uvicorn[standard]>=0.30.0",
+    "xgboost>=2.0.0",
+    "pytest>=8.3.0",
+]
+
+[tool.uv]
+package = false

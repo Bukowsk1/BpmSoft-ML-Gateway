@@ -1,0 +1,30 @@
+services:
+  bpmsoft-api:
+    build:
+      context: ..
+      dockerfile: Backend/Dockerfile
+    container_name: bpmsoft-ml-router
+    env_file:
+      - .env
+    environment:
+      BPMSOFT_KARINA_MODEL_PATH: /app/Karina/champion_model_best.zip
+      BPMSOFT_KARINA_PACKAGE_DIR: /app/Karina/Forecasting-demand
+    ports:
+      - "8000:8000"
+
+  bpmsoft-dashboard:
+    build:
+      context: ..
+      dockerfile: Backend/Dockerfile
+    container_name: bpmsoft-dashboard
+    command: ["python", "-m", "streamlit", "run", "Backend/dashboard.py", "--server.address", "0.0.0.0", "--server.port", "8501"]
+    env_file:
+      - .env
+    environment:
+      BPMSOFT_DASHBOARD_API_URL: http://bpmsoft-api:8000/api
+      BPMSOFT_KARINA_MODEL_PATH: /app/Karina/champion_model_best.zip
+      BPMSOFT_KARINA_PACKAGE_DIR: /app/Karina/Forecasting-demand
+    depends_on:
+      - bpmsoft-api
+    ports:
+      - "8501:8501"
