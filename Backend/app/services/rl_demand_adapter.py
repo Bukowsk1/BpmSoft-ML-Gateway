@@ -58,10 +58,10 @@ class RLDemandAdapter:
 
     def status(self) -> ModelStatus:
         return ModelStatus(
-            name="RL Demand v2",
+            name="RL Demand",
             loaded=self.model is not None and self.preprocessor is not None and self.history_frame is not None,
             artifact_path=str(self.artifact_path),
-            details=self._load_error or "RL demand model и offline-артефакты успешно загружены.",
+            details=self._load_error or "Модель успешно загружена и готова к работе.",
         )
 
     def predict_frame(self, payload_records: list[dict[str, Any]]) -> pd.DataFrame | None:

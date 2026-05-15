@@ -46,7 +46,7 @@ class DemandRouterService:
             selected_model, reason = self._select_model(row)
             selected_models.append(selected_model)
             routing_reasons.append(reason)
-            if selected_model == "rl_v2" and pd.notnull(row["rl_prediction"]):
+            if selected_model == "RL agent" and pd.notnull(row["rl_prediction"]):
                 selected_predictions.append(float(row["rl_prediction"]))
             else:
                 selected_predictions.append(float(row["karina_prediction"]))
@@ -69,10 +69,10 @@ class DemandRouterService:
         rl_ready = self.rl_adapter.status().loaded
 
         if not rl_ready:
-            return "karina", "RL-модель пока не подключена в live-inference, используем Karina как champion."
+            return "karina", "RL-модель пока не подключена, используем Karina как чемпион."
 
         if metrics is None:
-            return "karina", "Offline-метрики RL не загружены, используем Karina как champion."
+            return "karina", "Офлайн-метрики RL не загружены, используем Karina как чемпион."
 
         segment_label = str(row["segment"])
         category_label = str(row["category"])
@@ -80,47 +80,47 @@ class DemandRouterService:
 
         sku_match = self.metrics_service.get_best_row("sku", sku_label)
         if self._is_positive_proxy(sku_match, self.SKU_SMAPE_THRESHOLD):
-            return "rl_v2", (
-                f"Для SKU {sku_label} RL улучшает baseline на holdout "
-                f"(SMAPE gain {sku_match.smape_gain:.2f})."
+            return "RL agent", (
+                f"Товар {sku_label}: RL agent точнее бейзлайна "
+                f"(улучшение SMAPE: {sku_match.smape_gain:.2f}%)."
             )
         if self._is_negative_proxy(sku_match):
             return "karina", (
-                f"Для SKU {sku_label} RL не улучшает baseline на holdout, "
-                "оставляем Karina как более безопасный выбор."
+                f"Товар {sku_label}: RL agent ошибается чаще бейзлайна, "
+                "безопасно переключаем на модель Karina."
             )
 
         segment_match = self.metrics_service.get_best_row("segment", segment_label)
         if self._is_positive_proxy(segment_match, self.SEGMENT_SMAPE_THRESHOLD):
-            return "rl_v2", (
-                f"Для сегмента {segment_label} RL улучшает baseline на holdout "
-                f"(SMAPE gain {segment_match.smape_gain:.2f})."
+            return "RL agent", (
+                f"Сегмент {segment_label}: RL agent точнее бейзлайна "
+                f"(улучшение SMAPE: {segment_match.smape_gain:.2f}%)."
             )
         if self._is_negative_proxy(segment_match):
             return "karina", (
-                f"Для сегмента {segment_label} RL не улучшает baseline на holdout, "
-                "оставляем Karina как champion."
+                f"Сегмент {segment_label}: RL agent ошибается чаще бейзлайна, "
+                "безопасно переключаем на модель Karina."
             )
 
         category_match = self.metrics_service.get_best_row("category", category_label)
         if self._is_positive_proxy(category_match, self.CATEGORY_SMAPE_THRESHOLD):
-            return "rl_v2", (
-                f"Для категории {category_label} RL улучшает baseline на holdout "
-                f"(SMAPE gain {category_match.smape_gain:.2f})."
+            return "RL agent", (
+                f"Категория {category_label}: RL agent точнее бейзлайна "
+                f"(улучшение SMAPE: {category_match.smape_gain:.2f}%)."
             )
         if self._is_negative_proxy(category_match):
             return "karina", (
-                f"Для категории {category_label} RL не улучшает baseline на holdout, "
-                "оставляем Karina как champion."
+                f"Категория {category_label}: RL agent ошибается чаще бейзлайна, "
+                "безопасно переключаем на модель Karina."
             )
 
         if self._is_positive_proxy(metrics.overall, self.OVERALL_SMAPE_THRESHOLD):
-            return "rl_v2", (
-                "RL показывает устойчивое улучшение baseline на общем holdout, "
-                "поэтому выбран как лучший доступный demand-кандидат."
+            return "RL agent", (
+                "В среднем RL agent точнее бейзлайна, "
+                "поэтому выбран как лучший кандидат."
             )
 
-        return "karina", "Используем Karina как стабильный champion по общему offline-профилю."
+        return "karina", "Перестраховываемся и используем стабильную модель Karina."
 
     @staticmethod
     def _is_positive_proxy(metric_row: Any | None, threshold: float) -> bool:

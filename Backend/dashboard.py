@@ -151,7 +151,7 @@ if st.session_state.demand_result:
         metric_a.metric("Итоговый прогноз", f"{first_row['predicted_quantity']:.2f}")
         metric_b.metric("Модель Карины", f"{first_row['karina_prediction']:.2f}")
         rl_value = first_row["rl_prediction"]
-        metric_c.metric("RL v2", "н/д" if pd.isna(rl_value) else f"{float(rl_value):.2f}")
+        metric_c.metric("RL agent", "н/д" if pd.isna(rl_value) else f"{float(rl_value):.2f}")
 
         st.info(
             f"Выбранная модель: {first_row['selected_model']}.\n\n"

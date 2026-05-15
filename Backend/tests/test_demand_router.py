@@ -24,7 +24,7 @@ class StubRLAdapter:
 
     def status(self):
         return ModelStatus(
-            name="RL Demand v2",
+            name="RL Demand",
             loaded=self._loaded,
             artifact_path="/tmp/rl_demand_model.zip",
             details="ok" if self._loaded else "missing",

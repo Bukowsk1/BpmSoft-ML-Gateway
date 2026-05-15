@@ -48,10 +48,9 @@ class RLMetricsService:
                 by_segment=self._load_and_merge(segment_path, segment_baseline_path),
                 by_sku=self._load_and_merge(sku_path, sku_baseline_path),
                 routing_policy=(
-                    "Routing строится по proxy-метрикам RL vs baseline на holdout. "
-                    "Приоритет выбора: SKU -> segment -> category -> overall. "
-                    "Если RL устойчиво улучшает baseline, роутер может выбрать RL; "
-                    "иначе остаётся Karina как более стабильный champion."
+                    "Логика выбора: проверяем историческую точность от SKU до общей Категории. "
+                    "Если RL agent исторически бил бейзлайн — выбираем его. "
+                    "Иначе безопасно переключаемся на основную модель (Karina)."
                 ),
                 rl_ready_for_routing=True,
             )

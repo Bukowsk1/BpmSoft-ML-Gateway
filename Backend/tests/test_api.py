@@ -18,7 +18,7 @@ class FakeKarinaAdapter:
 class FakeRLAdapter:
     def status(self):
         return ModelStatus(
-            name="RL Demand v2",
+            name="RL Demand",
             loaded=False,
             artifact_path="/tmp/rl_demand_model.zip",
             details="Missing RL artifacts.",

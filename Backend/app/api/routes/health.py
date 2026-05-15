@@ -21,6 +21,5 @@ def healthcheck(request: Request) -> HealthResponse:
     return HealthResponse(
         status="ok",
         service=settings.app_name,
-        version=settings.app_version,
         demand_models=registry.demand_statuses(),
     )
