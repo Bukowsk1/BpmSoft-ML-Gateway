@@ -12,4 +12,4 @@ class HealthResponse(BaseModel):
     status: str
     service: str
     version: str
-    demand_model: ModelStatus
+    demand_models: list[ModelStatus]

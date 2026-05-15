@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Request
+from fastapi import HTTPException
 
 from app.core.audit import log_audit
-from app.schemas.demand import DemandPredictionRequest, DemandPredictionResponse
-from app.schemas.price import PricePredictionRequest, PricePredictionResponse
+from app.schemas.demand import DemandMetricsResponse, DemandPredictionRequest, DemandPredictionResponse
 
 router = APIRouter(prefix="/predict")
 
@@ -47,18 +47,13 @@ def get_demand_sample() -> dict:
     }
 
 
-@router.get("/price/sample")
-def get_price_sample() -> dict:
-    return {
-        "sku": "MI-006",
-        "brand": "MiBrand1",
-        "category": "Milk",
-        "region": "PL-Central",
-        "current_price": 2.38,
-        "stock_available": 141,
-        "delivered_qty": 128,
-        "promotion_flag": 0,
-    }
+@router.get("/demand/metrics", response_model=DemandMetricsResponse)
+def get_demand_metrics(request: Request) -> DemandMetricsResponse:
+    registry = request.app.state.model_registry
+    metrics = registry.metrics_service.get_metrics()
+    if metrics is None:
+        raise HTTPException(status_code=503, detail=registry.metrics_service.load_error() or "RL metrics are not loaded.")
+    return metrics
 
 
 @router.post("/demand", response_model=DemandPredictionResponse)
@@ -67,30 +62,13 @@ def predict_demand(
     request: Request,
 ) -> DemandPredictionResponse:
     registry = request.app.state.model_registry
-    response = registry.demand_adapter.predict(payload)
+    response = registry.demand_router.predict(payload)
     log_audit(
         "predict_demand",
         request_id=getattr(request.state, "request_id", None),
         rows=response.rows,
         skus=[item.sku for item in response.items],
         prediction_column=response.prediction_column,
-    )
-    return response
-
-
-@router.post("/price", response_model=PricePredictionResponse)
-def predict_price(
-    payload: PricePredictionRequest,
-    request: Request,
-) -> PricePredictionResponse:
-    registry = request.app.state.model_registry
-    response = registry.price_service.predict(payload)
-    log_audit(
-        "predict_price",
-        request_id=getattr(request.state, "request_id", None),
-        sku=payload.sku,
-        region=payload.region,
-        recommended_price=response.recommended_price,
-        is_mock=response.is_mock,
+        selected_models=[item.selected_model for item in response.items],
     )
     return response

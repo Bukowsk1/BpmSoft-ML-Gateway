@@ -15,12 +15,12 @@ def healthcheck(request: Request) -> HealthResponse:
     log_audit(
         "healthcheck",
         request_id=request_id,
-        demand_model_loaded=registry.demand_status().loaded,
+        loaded_models=sum(1 for item in registry.demand_statuses() if item.loaded),
     )
 
     return HealthResponse(
         status="ok",
         service=settings.app_name,
         version=settings.app_version,
-        demand_model=registry.demand_status(),
+        demand_models=registry.demand_statuses(),
     )

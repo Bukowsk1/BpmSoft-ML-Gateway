@@ -25,3 +25,5 @@ def configure_logging(log_level: str) -> None:
         }
     )
     logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+    logging.getLogger("matplotlib").setLevel(logging.WARNING)
+    logging.getLogger("matplotlib.font_manager").setLevel(logging.WARNING)

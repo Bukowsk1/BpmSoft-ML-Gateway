@@ -101,65 +101,6 @@
           }
         }
       ]
-    },
-    {
-      "name": "Price",
-      "item": [
-        {
-          "name": "GET Price Sample",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "X-Request-ID",
-                "value": "{{requestId}}"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/predict/price/sample",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "predict",
-                "price",
-                "sample"
-              ]
-            }
-          }
-        },
-        {
-          "name": "POST Predict Price",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "X-Request-ID",
-                "value": "{{requestId}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"sku\": \"MI-006\",\n  \"brand\": \"MiBrand1\",\n  \"category\": \"Milk\",\n  \"region\": \"PL-Central\",\n  \"current_price\": 2.38,\n  \"stock_available\": 141,\n  \"delivered_qty\": 128,\n  \"promotion_flag\": 0\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/predict/price",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "predict",
-                "price"
-              ]
-            },
-            "description": "Демо-запрос к mock-сервису прогноза цены."
-          }
-        }
-      ]
     }
   ]
 }

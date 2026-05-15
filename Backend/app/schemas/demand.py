@@ -119,7 +119,11 @@ class DemandPredictionItem(BaseModel):
     stock_available: int
     delivered_qty: int
     units_sold: float | None = None
+    karina_prediction: float
+    rl_prediction: float | None = None
     predicted_quantity: float
+    selected_model: str
+    routing_reason: str
 
 
 class DemandPredictionResponse(BaseModel):
@@ -127,3 +131,29 @@ class DemandPredictionResponse(BaseModel):
     rows: int
     prediction_column: str
     items: list[DemandPredictionItem]
+
+
+class DemandMetricRow(BaseModel):
+    label: str
+    rows: int
+    mae_baseline: float | None = None
+    mae_rl: float
+    mae_gain: float | None = None
+    rmse_baseline: float | None = None
+    rmse_rl: float
+    rmse_gain: float | None = None
+    mape_baseline: float | None = None
+    mape_rl: float
+    mape_gain: float | None = None
+    smape_baseline: float | None = None
+    smape_rl: float
+    smape_gain: float | None = None
+
+
+class DemandMetricsResponse(BaseModel):
+    overall: DemandMetricRow
+    by_category: list[DemandMetricRow]
+    by_segment: list[DemandMetricRow]
+    by_sku: list[DemandMetricRow]
+    routing_policy: str
+    rl_ready_for_routing: bool

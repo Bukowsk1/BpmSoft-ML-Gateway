@@ -5,7 +5,7 @@ ML API-шлюз для интеграции с BPMSoft.
 В репозитории:
 - [Backend/README.md](Backend/README.md) — основная документация, quickstart, архитектура и демонстрационные материалы
 - `Karina/` — готовый артефакт demand-модели и её исходный ML-контур
-- `Vlad/` — placeholder под будущий pricing-модуль
+- `supply-rl/` — RL-контур и Colab-ready обучение второй demand-модели
 
 Быстрый старт:
 

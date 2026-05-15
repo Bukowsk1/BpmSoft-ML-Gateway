@@ -10,11 +10,7 @@ from fastapi import HTTPException
 
 from app.schemas.common import ModelStatus
 from app.core.runtime_checks import libomp_hint
-from app.schemas.demand import (
-    DemandPredictionItem,
-    DemandPredictionRequest,
-    DemandPredictionResponse,
-)
+from app.schemas.demand import DemandPredictionRequest
 
 logger = logging.getLogger(__name__)
 
@@ -52,35 +48,24 @@ class DemandModelAdapter:
             details=self._load_error or "Модель успешно загружена и готова к работе.",
         )
 
-    def predict(self, payload: DemandPredictionRequest) -> DemandPredictionResponse:
+    def predict_frame(self, records: list[DemandPredictionRequest | Any]) -> pd.DataFrame:
         if self.model is None:
-            raise HTTPException(
-                status_code=503,
-                detail={
-                    "message": "Demand model is not loaded.",
-                    "reason": self._load_error or "Unknown load error.",
-                },
-            )
+            raise HTTPException(status_code=503, detail={"message": "Demand model is not loaded.", "reason": self._load_error or "Unknown load error."})
 
-        frame = pd.DataFrame([record.model_dump(mode="json") for record in payload.records])
+        serialized_records = []
+        for record in records:
+            if hasattr(record, "model_dump"):
+                serialized_records.append(record.model_dump(mode="json"))
+            else:
+                serialized_records.append(record)
+        frame = pd.DataFrame(serialized_records)
 
         # Champion model was trained with target column `quantity`,
         # while the external BPMSoft contract uses `units_sold`.
         frame["quantity"] = frame["units_sold"]
 
         prediction_frame = self.model.predict(future_df=frame)
-        prediction_frame = prediction_frame.where(pd.notnull(prediction_frame), None)
-        items = [
-            DemandPredictionItem.model_validate(item)
-            for item in prediction_frame.to_dict(orient="records")
-        ]
-
-        return DemandPredictionResponse(
-            model_name="Karina demand champion",
-            rows=len(items),
-            prediction_column=self.model.prediction_column,
-            items=items,
-        )
+        return prediction_frame.where(pd.notnull(prediction_frame), None)
 
     def _ensure_import_path(self) -> None:
         package_dir = str(self.package_dir)

@@ -19,7 +19,11 @@ class Settings(BaseSettings):
     karina_dir: Path = Path(__file__).resolve().parents[3] / "Karina"
     karina_package_dir: Path = Path(__file__).resolve().parents[3] / "Karina" / "Forecasting-demand"
     karina_model_path: Path = Path(__file__).resolve().parents[3] / "Karina" / "champion_model_best.zip"
-    vlad_dir: Path = Path(__file__).resolve().parents[3] / "Vlad"
+    artifacts_dir: Path = Path(__file__).resolve().parents[2] / "artifacts"
+    rl_metrics_dir: Path = Path(__file__).resolve().parents[2] / "artifacts" / "rl_metrics"
+    rl_model_path: Path = Path(__file__).resolve().parents[2] / "artifacts" / "rl_model" / "rl_demand_model.zip"
+    rl_preprocessor_path: Path = Path(__file__).resolve().parents[2] / "artifacts" / "rl_model" / "preprocessor.pkl"
+    rl_reference_data_path: Path = Path(__file__).resolve().parents[3] / "FMCG_2022_2024 (2).csv"
     dashboard_api_base_url: str = "http://127.0.0.1:8000/api"
 
     model_config = SettingsConfigDict(
