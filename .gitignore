@@ -1,15 +1,44 @@
-.DS_Store
+# Compiled python
 __pycache__/
 *.py[cod]
-.pytest_cache/
-.venv/
-.env
+*$py.class
 
+# Testing
+.pytest_cache/
+.mypy_cache/
+
+# Environments
+.env
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Streamlit
+.streamlit/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Data & Heavy Models
+*.csv
+*.parquet
+*.zip
+*.pkl
+
+# Specific project ignores
 Backend/.env
 Backend/__pycache__/
 Backend/app/__pycache__/
 Backend/tests/__pycache__/
 Backend/.pytest_cache/
-
 Karina/kaggle/
 Karina/Forecasting-demand/.git/

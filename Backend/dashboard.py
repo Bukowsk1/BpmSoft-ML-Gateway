@@ -67,7 +67,7 @@ if "metrics_result" not in st.session_state:
 
 
 with st.expander("Healthcheck", expanded=True):
-    if st.button("Обновить статус API", use_container_width=True):
+    if st.button("Обновить статус API", width="stretch"):
         st.rerun()
     try:
         health_response = httpx.get(f"{API_URL}/health", timeout=10.0)
@@ -78,7 +78,7 @@ with st.expander("Healthcheck", expanded=True):
 
 st.subheader("Прогноз спроса")
 sample_left, _ = st.columns(2)
-if sample_left.button("Пример запроса (Спрос)", use_container_width=True):
+if sample_left.button("Пример запроса (Спрос)", width="stretch"):
     ok, result = get_json("/predict/demand/sample")
     if ok:
         st.session_state.demand_payload = result
@@ -91,7 +91,7 @@ with st.expander("Редактировать входные данные нап�
         value=json.dumps(st.session_state.demand_payload, ensure_ascii=False, indent=2),
         height=260,
     )
-    if st.button("Применить JSON payload", use_container_width=True):
+    if st.button("Применить JSON payload", width="stretch"):
         try:
             st.session_state.demand_payload = json.loads(demand_payload_text)
             st.rerun()
@@ -114,7 +114,7 @@ with st.form("demand-form"):
     stock_available = st.number_input("Stock available", min_value=0, value=int(current_record["stock_available"]), step=1)
     delivered_qty = st.number_input("Delivered qty", min_value=0, value=int(current_record["delivered_qty"]), step=1)
     units_sold = st.number_input("Units sold", min_value=0, value=int(current_record["units_sold"]), step=1)
-    submit_demand = st.form_submit_button("Отправить в модель", use_container_width=True)
+    submit_demand = st.form_submit_button("Отправить в модель", width="stretch")
 
 if submit_demand:
     records = st.session_state.demand_payload.get("records", [])
@@ -157,13 +157,13 @@ if st.session_state.demand_result:
             f"Выбранная модель: {first_row['selected_model']}.\n\n"
             f"Причина: {first_row['routing_reason']}"
         )
-    st.dataframe(result_df, use_container_width=True)
+    st.dataframe(result_df, width="stretch")
     st.download_button(
         "Скачать прогноз",
         data=result_df.to_csv(index=False).encode("utf-8"),
         file_name="demand_predictions.csv",
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
     )
 
 st.subheader("Сравнение моделей")
@@ -178,12 +178,12 @@ if st.session_state.metrics_result:
     overall = pd.DataFrame([metrics["overall"]])
     badge = "готов к роутингу" if metrics["rl_ready_for_routing"] else "только offline-сравнение"
     st.caption(f"{metrics['routing_policy']} Текущий статус RL: {badge}.")
-    st.dataframe(overall, use_container_width=True)
+    st.dataframe(overall, width="stretch")
 
     category_tab, segment_tab, sku_tab = st.tabs(["По категориям", "По сегментам", "По SKU"])
     with category_tab:
-        st.dataframe(pd.DataFrame(metrics["by_category"]), use_container_width=True)
+        st.dataframe(pd.DataFrame(metrics["by_category"]), width="stretch")
     with segment_tab:
-        st.dataframe(pd.DataFrame(metrics["by_segment"]), use_container_width=True)
+        st.dataframe(pd.DataFrame(metrics["by_segment"]), width="stretch")
     with sku_tab:
-        st.dataframe(pd.DataFrame(metrics["by_sku"]), use_container_width=True)
+        st.dataframe(pd.DataFrame(metrics["by_sku"]), width="stretch")
