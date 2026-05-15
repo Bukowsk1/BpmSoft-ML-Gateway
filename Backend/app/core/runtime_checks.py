@@ -34,3 +34,7 @@ def prepare_runtime_cache(base_dir: Path) -> None:
     fontconfig_dir.mkdir(parents=True, exist_ok=True)
     os.environ.setdefault("MPLCONFIGDIR", str(mpl_dir))
     os.environ.setdefault("XDG_CACHE_HOME", str(xdg_dir))
+
+    # Fix OpenMP deadlock/segfaults on macOS when loading PyTorch and LightGBM together
+    os.environ.setdefault("OMP_NUM_THREADS", "1")
+    os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "True")
